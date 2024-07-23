@@ -2,4 +2,14 @@
 
 source "https://rubygems.org"
 
-# gem "rails"
+# Auto-loading
+gem "zeitwerk"
+
+# Formatting
+gem "standardrb"
+
+# Debugging hex values
+gem "hexdump"
+
+# Testing
+gem "minitest"
