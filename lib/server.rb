@@ -19,12 +19,23 @@ class Server
       puts "Accepted client"
 
       Thread.new do
-        # TODO: Loop
         request = RequestReader.read(client)
         puts "Request: #{request.inspect}"
+
         response = request.handle
         puts "Response: #{response.inspect}"
-        response.write(client)
+
+        response_body_io = StringIO.new
+        ProtocolWriter.write_int32(response_body_io, request.header.correlation_id)
+        response.write(response_body_io)
+
+        response_body_size = response_body_io.string.bytesize
+        puts "Response body size: #{response_body_io.string.bytesize}"
+
+        puts Hexdump.hexdump(response_body_io.string)
+
+        ProtocolWriter.write_int32(client, response_body_size)
+        client.write(response_body_io.string)
       end
     end
   end

@@ -8,15 +8,15 @@ class Responses::ApiVersionsResponse
   def write(io)
     ProtocolWriter.write_int16(io, @error_code)
 
-    ProtocolWriter.write_int32(io, @api_keys.length)
+    ProtocolWriter.write_unsigned_varint(io, 0)
+    # ProtocolWriter.write_unsigned_varint(io, @api_keys.length + 1)
 
-    # TODO: Write array
     # @api_keys.each do |api_key|
     #   ProtocolWriter.write_int16(io, api_key[:api_key])
     #   ProtocolWriter.write_int16(io, api_key[:min_version])
     #   ProtocolWriter.write_int16(io, api_key[:max_version])
     # end
 
-    # ProtocolWriter.write_int32(io, @throttle_time_ms)
+    ProtocolWriter.write_int32(io, @throttle_time_ms)
   end
 end
