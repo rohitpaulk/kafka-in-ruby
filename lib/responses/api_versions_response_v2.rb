@@ -1,28 +1,34 @@
 class Responses::ApiVersionsResponseV2 < Responses::BaseResponse
-  attr_reader :error_code, :api_keys, :throttle_time_ms
+  attr_reader :error_code
+  attr_reader :api_keys
+  attr_reader :throttle_time_ms
 
-  def initialize(error_code, api_keys, throttle_time_ms)
+  def initialize(correlation_id, error_code, api_keys, throttle_time_ms)
+    super(correlation_id)
     @error_code = error_code
     @api_keys = api_keys
     @throttle_time_ms = throttle_time_ms
   end
 
-  def write(io)
+  def encode_body
+    io = StringIO.new
     ProtocolWriter.write_int16(io, @error_code)
 
-    ProtocolWriter.write_unsigned_varint(io, 0)
-    # ProtocolWriter.write_unsigned_varint(io, @api_keys.length + 1)
+    ProtocolWriter.write_int32(io, @api_keys.length)
 
-    # @api_keys.each do |api_key|
-    #   ProtocolWriter.write_int16(io, api_key[:api_key])
-    #   ProtocolWriter.write_int16(io, api_key[:min_version])
-    #   ProtocolWriter.write_int16(io, api_key[:max_version])
-    # end
+    @api_keys.each do |api_key|
+      ProtocolWriter.write_int16(io, api_key[:api_key])
+      ProtocolWriter.write_int16(io, api_key[:min_version])
+      ProtocolWriter.write_int16(io, api_key[:max_version])
+    end
 
-    ProtocolWriter.write_int32(io, @throttle_time_ms)
+    # TODO: See why this isn't required?
+    # ProtocolWriter.write_int32(io, @throttle_time_ms)
+
+    io.string
   end
 
-  def self.decode_body(header, bytes)
+  def self.decode_body(correlation_id, bytes)
     io = StringIO.new(bytes)
     error_code = ProtocolReader.read_int16(io)
     api_keys_count = ProtocolReader.read_int32(io)
@@ -43,6 +49,6 @@ class Responses::ApiVersionsResponseV2 < Responses::BaseResponse
     remaining_data = io.read
     raise "Expected EOF, got: #{remaining_data.inspect}" if remaining_data.length > 0
 
-    new(error_code, api_keys, 0)
+    new(correlation_id, error_code, api_keys, 0)
   end
 end
