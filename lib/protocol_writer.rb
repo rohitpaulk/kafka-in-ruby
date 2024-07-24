@@ -27,10 +27,17 @@ class ProtocolWriter
     end
   end
 
-  # TODO: Verify this
-  # def self.write_nullable_string(io, value)
-  #   length = value ? value.length : -1
-  #   write_int16(io, length)
-  #   io.write(value) if length != -1
-  # end
+  # Represents a sequence of characters or null. For non-null strings, first
+  # the length N is given as an INT16. Then N bytes follow which are the UTF-8
+  # encoding of the character sequence. A null value is encoded with length of
+  # -1 and there are no following bytes.
+  def self.write_nullable_string(io, value)
+    if value.nil?
+      write_int16(io, -1)
+      return
+    end
+
+    write_int16(io, value.bytesize)
+    io.write(value)
+  end
 end

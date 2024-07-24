@@ -1,4 +1,4 @@
-class Responses::ApiVersionsResponse
+class Responses::ApiVersionsResponseV2
   def initialize(error_code, api_keys, throttle_time_ms)
     @error_code = error_code
     @api_keys = api_keys
