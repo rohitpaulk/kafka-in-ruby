@@ -15,8 +15,9 @@ class ApiVersionsResponseV2Test < Minitest::Test
   end
 
   def test_encode_decode
-    response = Responses::ApiVersionsResponseV2.new(0, 0, [{api_key: 0, min_version: 0, max_version: 10}], 0)
+    response = Responses::ApiVersionsResponseV2.new(1, 0, [{api_key: 1, min_version: 0, max_version: 10}], 0)
     io = StringIO.new(response.encode)
+    puts Hexdump.hexdump(io.string)
     decoded_response = Responses::ApiVersionsResponseV2.read(io)
     assert_equal response, decoded_response
   end

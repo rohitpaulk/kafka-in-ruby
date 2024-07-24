@@ -10,6 +10,12 @@ class Responses::ApiVersionsResponseV2 < Responses::BaseResponse
     @throttle_time_ms = throttle_time_ms
   end
 
+  def ==(other)
+    @error_code == other.error_code &&
+      @api_keys == other.api_keys &&
+      @throttle_time_ms == other.throttle_time_ms
+  end
+
   def encode_body
     io = StringIO.new
     ProtocolWriter.write_int16(io, @error_code)
@@ -38,9 +44,13 @@ class Responses::ApiVersionsResponseV2 < Responses::BaseResponse
     api_keys = []
 
     (1..api_keys_count).each do
+      puts "Reading once"
       api_key = ProtocolReader.read_int16(io)
+      puts "API key: #{api_key}"
       min_version = ProtocolReader.read_int16(io)
+      puts "Min version: #{min_version}"
       max_version = ProtocolReader.read_int16(io)
+      puts "Max version: #{max_version}"
 
       api_keys << {api_key: api_key, min_version: min_version, max_version: max_version}
     end
