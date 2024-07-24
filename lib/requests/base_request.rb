@@ -6,7 +6,10 @@ class Requests::BaseRequest
   end
 
   def encode
-    header_and_body = header.encode + encode_body
-    [header.encode, encode_body].pack("C*")
+    io = StringIO.new
+    message_bytes = header.encode + encode_body
+    ProtocolWriter.write_int32(io, message_bytes.bytesize)
+    io.write(message_bytes)
+    io.string
   end
 end

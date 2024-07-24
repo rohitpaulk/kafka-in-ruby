@@ -7,7 +7,7 @@ class Requests::ApiVersionsRequestV2 < Requests::BaseRequest
     Requests::ApiVersionsRequestV2.new(header: header) # No body to decode for ApiVersionsRequest
   end
 
-  def encode_body(request)
+  def encode_body
     "" # No body to encode for ApiVersionsRequestV2
   end
 end
