@@ -23,6 +23,6 @@ class RequestReader
       raise "Unknown API key: #{api_key}"
     end
 
-    request_class.decode(request_header, message_io.read)
+    request_class.decode_body(request_header, message_io.read)
   end
 end

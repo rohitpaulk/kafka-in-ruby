@@ -1,6 +1,6 @@
 class Requests::ApiVersionsRequestV2 < Requests::BaseRequest
   def handle
-    Responses::ApiVersionsResponse.new(0, [{api_key: 18, min_version: 0, max_version: 2}], 100)
+    Responses::ApiVersionsResponseV2.new(header.correlation_id, 0, [{api_key: 18, min_version: 0, max_version: 2}], 100)
   end
 
   def self.decode_body(header, body_bytes)

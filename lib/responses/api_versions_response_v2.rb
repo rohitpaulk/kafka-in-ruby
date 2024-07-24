@@ -31,7 +31,9 @@ class Responses::ApiVersionsResponseV2 < Responses::BaseResponse
   def self.decode_body(correlation_id, bytes)
     io = StringIO.new(bytes)
     error_code = ProtocolReader.read_int16(io)
+    puts "Error code: #{error_code}"
     api_keys_count = ProtocolReader.read_int32(io)
+    puts "API keys count: #{api_keys_count}"
 
     api_keys = []
 

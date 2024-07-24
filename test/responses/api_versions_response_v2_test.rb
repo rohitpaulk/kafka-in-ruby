@@ -14,6 +14,13 @@ class ApiVersionsResponseV2Test < Minitest::Test
     assert_equal format_as_hex("\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x0A"), format_as_hex(response.encode)
   end
 
+  def test_encode_decode
+    response = Responses::ApiVersionsResponseV2.new(0, 0, [{api_key: 0, min_version: 0, max_version: 10}], 0)
+    io = StringIO.new(response.encode)
+    decoded_response = Responses::ApiVersionsResponseV2.read(io)
+    assert_equal response, decoded_response
+  end
+
   def format_as_hex(bytes)
     bytes.unpack1("H*").chars.each_slice(2).map(&:join).join(" ")
   end
