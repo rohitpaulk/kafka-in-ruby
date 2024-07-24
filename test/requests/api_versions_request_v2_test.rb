@@ -13,7 +13,7 @@ class ApiVersionsRequestV2Test < Minitest::Test
     assert_equal format_as_hex("\x00\x00\x00\x0A\x00\x12\x00\x02\x00\x00\x00\x01\xFF\xFF"), format_as_hex(request.encode)
   end
 
-  def test_kafka_bytes
+  def test_can_send_to_kafka
     request_header = RequestHeader.new(api_key: 18, api_version: 2, correlation_id: 1, client_id: nil)
     request = Requests::ApiVersionsRequestV2.new(header: request_header)
 

@@ -20,15 +20,11 @@ class Server
 
       Thread.new do
         request = RequestReader.read(client)
-        puts "Request: #{request.inspect}"
-
-        
-
+        puts "Received request"
         response = request.handle
-        puts "Response: #{response.inspect}"
-
-        puts Hexdump.hexdump(response.encode)
+        puts "Responding"
         client.write(response.encode)
+        # puts Hexdump.hexdump(response.encode)
       end
     end
   end

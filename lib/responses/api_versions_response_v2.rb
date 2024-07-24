@@ -29,7 +29,7 @@ class Responses::ApiVersionsResponseV2 < Responses::BaseResponse
     end
 
     # TODO: See why this isn't required?
-    # ProtocolWriter.write_int32(io, @throttle_time_ms)
+    ProtocolWriter.write_int32(io, @throttle_time_ms)
 
     io.string
   end
@@ -55,12 +55,11 @@ class Responses::ApiVersionsResponseV2 < Responses::BaseResponse
       api_keys << {api_key: api_key, min_version: min_version, max_version: max_version}
     end
 
-    # TODO: Investigate why throttle_time_ms isn't included?
-    # throttle_time_ms = ProtocolReader.read_int32(io)
+    throttle_time_ms = ProtocolReader.read_int32(io)
 
     remaining_data = io.read
     raise "Expected EOF, got: #{remaining_data.inspect}" if remaining_data.length > 0
 
-    new(correlation_id, error_code, api_keys, 0)
+    new(correlation_id, error_code, api_keys, throttle_time_ms)
   end
 end
